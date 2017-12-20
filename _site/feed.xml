@@ -5,8 +5,8 @@
     <description>关于 Lua, OpenResty | poslua, linux, 性能, 安全, 计算机技术 | 这里是 @ms2008 的个人博客，与你一起发现更大的世界。</description>
     <link>http://0.0.0.0:4000/</link>
     <atom:link href="http://0.0.0.0:4000/feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Wed, 20 Dec 2017 10:57:06 +0800</pubDate>
-    <lastBuildDate>Wed, 20 Dec 2017 10:57:06 +0800</lastBuildDate>
+    <pubDate>Wed, 20 Dec 2017 11:15:49 +0800</pubDate>
+    <lastBuildDate>Wed, 20 Dec 2017 11:15:49 +0800</lastBuildDate>
     <generator>Jekyll v3.6.2</generator>
     
       <item>
@@ -117,14 +117,6 @@
 &lt;p&gt;&lt;img src=&quot;/img/in-post/php-random.jpg&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;哪个比较差一目了然。&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;赞赏是对作者最大的支持&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/in-post/bonus.jpg&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 </description>
         <pubDate>Wed, 13 Dec 2017 00:00:00 +0800</pubDate>
         <link>http://0.0.0.0:4000/2017/12/13/Lua-Random-Period/</link>

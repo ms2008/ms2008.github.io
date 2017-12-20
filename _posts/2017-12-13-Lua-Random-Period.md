@@ -54,9 +54,3 @@ im:png("lua-random.png")
 ![](/img/in-post/php-random.jpg)
 
 哪个比较差一目了然。
-
----
-
-> 赞赏是对作者最大的支持
-
-![](/img/in-post/bonus.jpg)
