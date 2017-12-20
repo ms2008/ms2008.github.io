@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="关于 Lua, OpenResty | poslua, linux, 性能, 安全, 计算机技术 | 这里是 @ms2008 的个人博客，与你一起发现更大的世界。">
+    <meta name="keywords"  content="poslua, Lua, LuaJIT, OpenResty, ms2008, Python, Golang, Linux, Web, 互联网">
+    <meta name="theme-color" content="#000000">
+    
+    <title>poslua | ms2008 Blog</title>
+
+    <!-- Web App Manifest -->
+    <link rel="manifest" href="/pwa/manifest.json">
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="http://0.0.0.0:4000/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Poslua Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/about/">About</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/portfolio/">Portfolio</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/tags/">Tags</a>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    var __HuxNav__ = {
+        close: function(){
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        },
+        open: function(){
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+
+    // Bind Event
+    $toggle.addEventListener('click', function(e){
+        if ($navbar.className.indexOf('in') > 0) {
+            __HuxNav__.close()
+        }else{
+            __HuxNav__.open()
+        }
+    })
+
+    /**
+     * Since Fastclick is used to delegate 'touchstart' globally
+     * to hack 300ms delay in iOS by performing a fake 'click',
+     * Using 'e.stopPropagation' to stop 'touchstart' event from 
+     * $toggle/$collapse will break global delegation.
+     * 
+     * Instead, we use a 'e.target' filter to prevent handler
+     * added to document close HuxNav.  
+     *
+     * Also, we use 'click' instead of 'touchstart' as compromise
+     */
+    document.addEventListener('click', function(e){
+        if(e.target == $toggle) return;
+        if(e.target.className == 'icon-bar') return;
+        __HuxNav__.close();
+    })
+</script>
+
+
+    <!-- Page Header -->
+<header class="intro-header" style="background-image: url('/img/home-bg.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 ">
+                <div class="site-heading">
+                    <h1>Poslua Blog</h1>
+                    <!--<hr class="small">-->
+                    <span class="subheading">你是一名「优秀的程序员」要比你是一名「技术总监」要有意义的多</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Main Content -->
+<div class="container">
+	<div class="row">
+        
+
+<!-- USE SIDEBAR -->
+    <!-- PostList Container -->
+    		<div class="
+                col-lg-8 col-lg-offset-1
+                col-md-8 col-md-offset-1
+                col-sm-12
+                col-xs-12
+                postlist-container
+            ">
+    			
+<div class="post-preview">
+    <a href="/2017/12/19/tcp-timer/">
+        <h2 class="post-title">
+            TIME_WAIT 的 Timer
+        </h2>
+        
+        <h3 class="post-subtitle">
+            
+        </h3>
+        
+        <div class="post-content-preview">
+            我们知道 TCP 在关闭连接的时候，主动断开的一方将处于 TIME_WAIT 状态，并将持续两倍的 MSL。这个 MSL 在 RFC 793 中的建议是 1 分钟，但是很多系统实现都是 30 秒，所以 TIME_WAIT 的时长也就是 1 分钟。
+
+
+
+而且这个数值是硬编码在内核中的，也就是说除非你重新编译内核，否则没法修改它。我们可以通过 ss 来查看 TIME_WAIT 的剩余存活时长(...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by ms2008 on December 19, 2017
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2017/12/13/Lua-Random-Period/">
+        <h2 class="post-title">
+            直观的表现 PRNG 周期性
+        </h2>
+        
+        <h3 class="post-subtitle">
+            无图无真相。真的真，真出声
+        </h3>
+        
+        <div class="post-content-preview">
+            我在前面的一些文章中介绍过：Lua 随机数算法用的是 LCG（32位的随机数，周期最多为2^32^）; LuaJIT 用的是 LFSR，周期达到 2^223^。下面是我分别用 Lua 和 LuaJIT 的随机数填充一个位图，代码：
+
+#!/usr/bin/env lua
+-- Draws the B/W image with lua-gd
+
+local gd = require "gd"
+
+...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by ms2008 on December 13, 2017
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2017/10/27/Lua-randomseed/">
+        <h2 class="post-title">
+            重新认识 randomseed
+        </h2>
+        
+        <h3 class="post-subtitle">
+            原生 Lua 的 randomseed 是不支持浮点数的
+        </h3>
+        
+        <div class="post-content-preview">
+            在之前的文章中，我写过这样的测试用例：
+
+local seed = 123456
+for i=1,2 do
+    math.randomseed(seed + (i-1)/10)
+    local num = {}
+    for j=1,10 do
+        table.insert(num, math.random(100))
+    end
+    print(table.c...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by ms2008 on October 27, 2017
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2017/10/26/Lua-Random/">
+        <h2 class="post-title">
+            Lua 中的随机数
+        </h2>
+        
+        <h3 class="post-subtitle">
+            随机数生成对我们太重要了，我们不能让它随机生成
+        </h3>
+        
+        <div class="post-content-preview">
+            Lua 随机数算法用的是 libc 中的 rand, 也就是 LCG。然而这个算法的随机性一般。尤其是在一些平台上，当随机种子变化非常小的时候，产生的随机数变化也非常小。这样再经过 Lua 的精度取舍之后，产生的随机序列仍然很相似（伪随机的结果变成可预知性）。
+
+lua-l 上也讨论过这个问题 msg00564，lua 的作者之一 lhf 给出的解决方案是先弹出前面几个看起来「不怎么随机」的...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by ms2008 on October 26, 2017
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2017/10/24/PRNG/">
+        <h2 class="post-title">
+            正确认识随机数
+        </h2>
+        
+        <h3 class="post-subtitle">
+            北京车牌摇号的算法是公平的
+        </h3>
+        
+        <div class="post-content-preview">
+            前一阵子我去参加了 OpenResty Con 2017, 来自 KONG 的 Thibault Charbonnier 分享了他们在 OpenResty 上关于随机数应用的一些 Tips. 这才知道 LuaJIT 使用的随机算法和原生 Lua 的算法是不同的。我在自己的项目中也常常有使用随机数，但基本上只是直接使用，没有探寻背后的一些原理。刚好利用这个机会来好好补充下这方面的知识。
+
+引言...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by ms2008 on October 24, 2017
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2017/07/23/tcp-rst/">
+        <h2 class="post-title">
+            警惕系统中那些异常的 RST
+        </h2>
+        
+        <h3 class="post-subtitle">
+            认真学习协议栈很重要
+        </h3>
+        
+        <div class="post-content-preview">
+            我们的系统有一个应用启用了连接池来连接后端的应用，最近我却发现这个连接池貌似并不能正常工作。理论上来说，当启用了连接池，应用到后端的连接应该稳定才对，而我通过 ss 观察到的现象却是应用不断的建立连接，断开连接。更为奇怪的是，应用方并没有出现 TIME_WAIT。起初我怀疑是服务端主动关闭了连接，但是在服务端也并没有发现 TIME_WAIT，所以可以基本排除这个问题。
+
+之后抓了下包才发现，...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by ms2008 on July 23, 2017
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2017/06/05/security/">
+        <h2 class="post-title">
+            OpenResty 中的安全隐患
+        </h2>
+        
+        <h3 class="post-subtitle">
+            
+        </h3>
+        
+        <div class="post-content-preview">
+            在 OR 的官方 GitHub 中，介绍了这么一种简单的「路由」写法
+# use nginx var in code path
+# CAUTION: contents in nginx var must be carefully filtered,
+# otherwise there'll be great security risk!
+location ~ ^/app/([-_a-zA-Z...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by ms2008 on June 5, 2017
+    </p>
+</div>
+<hr>
+
+
+<!-- Pager -->
+
+
+    		</div>
+    <!-- Sidebar Container -->
+            <div class="
+                col-lg-3 col-lg-offset-0
+                col-md-3 col-md-offset-0
+                col-sm-12
+                col-xs-12
+                sidebar-container
+            ">
+                <!-- Featured Tags -->
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                        
+                            
+                                <a href="/tags/#Lua" title="Lua" rel="4">
+                                    Lua
+                                </a>
+                            
+                        
+                            
+                                <a href="/tags/#OpenResty" title="OpenResty" rel="3">
+                                    OpenResty
+                                </a>
+                            
+                        
+                            
+                                <a href="/tags/#TCP" title="TCP" rel="2">
+                                    TCP
+                                </a>
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                                <a href="/tags/#Random" title="Random" rel="2">
+                                    Random
+                                </a>
+                            
+                        
+                            
+                                <a href="/tags/#LuaJIT" title="LuaJIT" rel="2">
+                                    LuaJIT
+                                </a>
+                            
+                        
+                            
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Short About -->
+                <section class="visible-md visible-lg">
+                    <hr><h5><a href="/about/">ABOUT ME</a></h5>
+                    <div class="short-about">
+                        
+                            <img src="/img/avatar-ms2008.jpg" />
+                        
+                        
+                            <p>写写代码，做做设计，<br>离开世界之前，一切都是过程</p>
+                        
+                        <!-- SNS Link -->
+                        <ul class="list-inline">
+                            
+                            
+                            <li>
+                                <a href="https://twitter.com/ms2008vip">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                            
+                            
+                            <li>
+                                <a target="_blank" href="https://www.zhihu.com/people/ms2008">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa  fa-stack-1x fa-inverse">知</i>
+                                    </span>
+                                </a>
+                            </li>
+                            
+                            
+                            
+                            
+                            <li>
+                                <a target="_blank" href="https://github.com/ms2008">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                            
+                            
+                        </ul>
+                    </div>
+                </section>
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+                    
+                        <li><a href="http://ms2008.github.io">poslua</a></li>
+                    
+                        <li><a href="https://openresty.org/en/">OpenResty</a></li>
+                    
+                        <li><a href="http://lor.sumory.com/">Lor</a></li>
+                    
+                        <li><a href="http://luajit.org/">LuaJIT</a></li>
+                    
+                        <li><a href="https://www.python.org/">Python</a></li>
+                    
+                        <li><a href="https://golang.org/">Golang</a></li>
+                    
+                </ul>
+                
+    		</div>
+        
+	</div>
+</div>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+                    
+                    <li>
+                        <a href="https://twitter.com/ms2008vip">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+
+                    <!-- add Weibo, Zhihu by Hux, add target = "_blank" to <a> by Hux -->
+                    
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/ms2008">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+
+
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/ms2008">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; Poslua Blog 2017
+                    <br>
+                    Theme by <a href="http://huangxuan.me">Hux</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="100px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=huxpro&repo=huxpro.github.io&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<!-- Currently, only navbar scroll-down effect at desktop still depends on this -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js "></script>
+
+<!-- Service Worker -->
+
+<script src="/js/snackbar.js "></script>
+<script src="/js/sw-registration.js "></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!--
+     Because of the native support for backtick-style fenced code blocks
+     right within the Markdown is landed in Github Pages,
+     From V1.6, There is no need for Highlight.js,
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/
+     - https://github.com/jneen/rouge/wiki/list-of-supported-languages-and-lexers
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async('/js/jquery.tagcloud.js',function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+
+<!-- Baidu Tongji -->
+
+
+
+<!-- Side Catalog -->
+
+
+
+<!-- Multi-Lingual -->
+
+
+
+
+<!-- Image to hack wechat -->
+<img src="/img/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>

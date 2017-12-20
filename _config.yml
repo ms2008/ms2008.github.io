@@ -1,1 +1,108 @@
-theme: jekyll-theme-architect
+# Site settings
+title: Poslua Blog
+SEOTitle: poslua | ms2008 Blog
+header-img: img/home-bg.jpg
+email: ms2008vip@gmail.com
+description: "关于 Lua, OpenResty | poslua, linux, 性能, 安全, 计算机技术 | 这里是 @ms2008 的个人博客，与你一起发现更大的世界。"
+keyword: "poslua, Lua, LuaJIT, OpenResty, ms2008, Python, Golang, Linux, Web, 互联网"
+url: "https://ms2008.github.io"              # your host, for absolute URL
+baseurl: ""                             # for example, '/blog' if your blog hosted on 'host/blog'
+
+
+
+# SNS settings
+RSS: false
+#weibo_username:     ms2008
+zhihu_username:     ms2008
+github_username:    ms2008
+twitter_username:   ms2008vip
+#facebook_username:  ms2008
+# linkedin_username:  firstname-lastname-idxxxx
+
+
+
+# Build settings
+# from 2016, 'pygments' is unsupported on GitHub Pages. Use 'rouge' for highlighting instead.
+highlighter: rouge
+permalink: pretty
+paginate: 10
+exclude: ["less","node_modules","Gruntfile.js","package.json","README.md","README.zh.md"]
+anchorjs: true                          # if you want to customize anchor. check out line:181 of `post.html`
+
+
+
+# Gems
+# from PR#40, to support local preview for Jekyll 3.0
+plugins: [jekyll-paginate]
+
+
+
+# Markdown settings
+# replace redcarpet to kramdown,
+# although redcarpet can auto highlight code, the lack of header-id make the catalog impossible, so I switch to kramdown
+# document: http://jekyllrb.com/docs/configuration/#kramdown
+markdown: kramdown
+kramdown:
+  input: GFM                            # use Github Flavored Markdown !important
+
+
+
+# Disqus settings
+disqus_username: disqus_p43tdOmpxq
+
+# Netease setttings
+netease_comment: false
+
+
+
+# Analytics settings
+# Baidu Analytics
+# ba_track_id: [your track id]
+
+# Google Analytics
+#ga_track_id: 'UA-49627206-1'            # Format: UA-xxxxxx-xx
+#ga_domain: ms2008.github.io
+
+
+
+# Sidebar settings
+sidebar: true                           # whether or not using Sidebar.
+sidebar-about-description: "写写代码，做做设计，<br>离开世界之前，一切都是过程"
+sidebar-avatar: /img/avatar-ms2008.jpg      # use absolute URL, seeing it's used in both `/` and `/about/`
+
+
+
+# Featured Tags
+featured-tags: true                     # whether or not using Feature-Tags
+featured-condition-size: 1              # A tag will be featured if the size of it is more than this condition value
+
+
+
+# Progressive Web Apps
+chrome-tab-theme-color: "#000000"
+service-worker: true
+
+
+
+# Friends
+friends: [
+    {
+        title: "poslua",
+        href: "http://ms2008.github.io"
+    },{
+        title: "OpenResty",
+        href: "https://openresty.org/en/"
+    },{
+        title: "Lor",
+        href: "http://lor.sumory.com/"
+    },{
+        title: "LuaJIT",
+        href: "http://luajit.org/"
+    },{
+        title: "Python",
+        href: "https://www.python.org/"
+    },{
+        title: "Golang",
+        href: "https://golang.org/"
+    }
+]
