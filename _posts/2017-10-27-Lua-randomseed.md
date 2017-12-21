@@ -10,6 +10,7 @@ tags:
     - Lua
     - LuaJIT
     - OpenResty
+    - PRNG
 ---
 
 在之前的文章中，我写过这样的测试用例：
