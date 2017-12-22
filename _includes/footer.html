@@ -193,10 +193,10 @@
     // Originial
     var _hmt = _hmt || [];
     (function() {
-      var hm = document.createElement("script");
-      hm.src = "//hm.baidu.com/hm.js?" + _baId;
-      var s = document.getElementsByTagName("script")[0];
-      s.parentNode.insertBefore(hm, s);
+        var hm = document.createElement("script");
+        hm.src = "//hm.baidu.com/hm.js?" + _baId;
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
     })();
 </script>
 {% endif %}
@@ -207,7 +207,7 @@
 <script type="text/javascript">
     function generateCatalog (selector) {
 
-        // interop with multilangual 
+        // interop with multilangual
         /*
         if ({{ page.multilingual }}) {
             _containerSelector = 'div.post-container.active'
@@ -300,7 +300,7 @@
             $en.style.display = "none";
             $en.classList.remove("active");
         }
-        // interop with catalog 
+        // interop with catalog
         if ("{{ page.catalog }}") generateCatalog(".catalog-body");
     }
 
@@ -318,3 +318,30 @@
     _render();
 </script>
 {% endif %}
+
+
+<!-- back-to-top -->
+<div id="back-top">
+    <a href="#section" data-toggle="tooltip" data-placement="top" title="top">
+    <i class="fa fa-chevron-up" aria-hidden="true"></i>
+    </a>
+</div>
+<script>
+	$('#back-top').hide();
+	$(document).ready(function () {
+    	$(window).scroll(function () {
+            if ($(this).scrollTop() > 250) {
+                $('#back-top').fadeIn();
+            } else {
+                $('#back-top').fadeOut();
+            }
+        });
+
+        $('#back-top a').click(function () {
+          $('body,html').animate({
+              scrollTop: 0
+          }, 800);
+          return false;
+        });
+    });
+</script>
