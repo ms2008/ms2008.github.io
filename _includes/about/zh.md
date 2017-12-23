@@ -14,7 +14,7 @@ Hey，我是 ms2008，程序员，多出没于[博客](https://ms2008.github.io)
 
 ##### 微信公众号
 
-<div class="visible-md visible-lg">
+<div class="visible-xs visible-sm visible-md visible-lg">
     <img src="/img/wechat-344.jpg" width="344" />
     <small class="img-hint">Scanning on mobile</small>
 </div>
