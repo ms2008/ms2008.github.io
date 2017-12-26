@@ -29,7 +29,7 @@ end
 其实我们只需要使用 LuaJIT 就可以解决这个问题了。在 LuaJIT 的主页上有这个介绍：
 
 > LuaJIT supports some language and library extensions from Lua 5.2. Features that are unlikely to break existing code are unconditionally enabled:
-> <br>
+> <br><br>
 > - goto and ::labels::.
 
 也就是说 LuaJIT 把 5.2 的这个特性拿过来了。那我们来验证下：
