@@ -1,6 +1,6 @@
 > Yet another man.
 
-Hi, I am *@ms2008* , a software engineer. Messing with computers for over 10 years.
+Hi, I am *@ms2008*, a software engineer. Messing with computers for over 10 years.
 
 This site's main purpose is to serve as the home of a slowly updating collection of technotes for my experience, primarily focused on Lua/OpenResty/Python/Golang/TCP_IP.
 
@@ -10,7 +10,11 @@ Feel free to email me with any comments, suggestions or bugs. I can't promise to
 
 ##### Wechat
 
-<div class="visible-xs visible-sm visible-md visible-lg">
+<div class="visible-md visible-lg">
     <img src="/img/wechat-344.jpg" width="344" />
+    <small class="img-hint">Scanning on mobile</small>
+</div>
+<div class="visible-xs visible-sm">
+    <img src="/img/wechat-258.jpg" width="258" />
     <small class="img-hint">Scanning on mobile</small>
 </div>
