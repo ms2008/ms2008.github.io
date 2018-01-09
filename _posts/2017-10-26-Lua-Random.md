@@ -54,11 +54,11 @@ print(table.concat(num3, ","))
 math.randomseed(os.time()+assert(tonumber(tostring({}):sub(7))))
 ```
 
-**值得庆幸的是 LuaJIT 已经将随机算法替换为 Tausworthe，也就是 LFSR (亦或 TURN)，循环长度达到 2^223^，并且能产生出质量更高的随机数。**
+**值得庆幸的是 LuaJIT 已经将随机算法替换为 Tausworthe，也就是 LFSR (亦或 TURN)，循环长度达到 2<sup>223</sup>，并且能产生出质量更高的随机数。**
 
 > **Enhanced PRNG for math.random()**
 ><br/><br/>
-> LuaJIT uses a Tausworthe PRNG with period 2^223^ to implement math.random() and math.randomseed(). The quality of the PRNG results is much superior compared to the standard Lua implementation which uses the platform-specific ANSI rand().
+> LuaJIT uses a Tausworthe PRNG with period 2<sup>223</sup> to implement math.random() and math.randomseed(). The quality of the PRNG results is much superior compared to the standard Lua implementation which uses the platform-specific ANSI rand().
 
 在 LuaJIT 再次运行上面的用例：
 

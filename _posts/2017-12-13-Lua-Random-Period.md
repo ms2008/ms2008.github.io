@@ -12,7 +12,7 @@ tags:
     - PRNG
 ---
 
-我在前面的一些文章中介绍过：Lua 随机数算法用的是 LCG（32位的随机数，周期最多为2^32^）; LuaJIT 用的是 LFSR，周期达到 2^223^。下面是我分别用 Lua 和 LuaJIT 的随机数填充一个位图，代码：
+我在前面的一些文章中介绍过：Lua 随机数算法用的是 LCG（32位的随机数，周期最多为2<sup>32</sup>）; LuaJIT 用的是 LFSR，周期达到 2<sup>223</sup>。下面是我分别用 Lua 和 LuaJIT 的随机数填充一个位图，代码：
 
 ```lua
 #!/usr/bin/env lua
