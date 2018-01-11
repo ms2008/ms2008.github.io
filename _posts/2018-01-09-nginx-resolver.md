@@ -73,5 +73,8 @@ server {
 
 但是从 `nginx 1.11.5` 开始，nginx 取消掉了 `--with-ipv6` 这个参数([参考这里][1])，并且自动启用了 IPv6。所以就发生了上面的异常，解决这个问题也很简单，就是手动关闭掉 resolver 的 IPv6 解析就好：`resolver 127.0.0.1 ipv6=off;`
 
+**我很奇怪 NGINX 在处理 DNS 响应时，为什么不用 [Happy Eyeballs][3] 之类的算法呢？**
+
 [1]: http://nginx.org/en/CHANGES
 [2]: https://github.com/openresty/lua-nginx-module/issues/1217
+[3]: http://www.rfc-base.org/rfc-6555.html
