@@ -8,7 +8,7 @@ header-img: "img/home-bg-o.jpg"
 catalog:    true
 tags:
     - TCP
-    - backlog
+    - module
 ---
 
 在 lua 中加载的其他文件的代码，通常可以使用 `dofile`、`loadfile`、`require` 函数等来完成。其中 `dofile` 每次加载都要编译执行，效率比较低，所以不推荐使用；同样 `loadfile` 虽然只需编译一次，但是并没有把结果缓存到 lua vm 中；因而，我们这里总是推荐使用第三种方式 `requir`e。
