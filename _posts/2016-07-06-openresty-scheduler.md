@@ -37,7 +37,7 @@ end
 1. Nginx worker 进程是单 OS 线程的
 2. ngx_lua 的“轻量级线程”是协作式的，而非抢占式的
 
-模块是不会有race condition问题的（这也是 lua 非抢占式协程的好处，但是可能会“串”）
+模块是不会有 race condition 问题的（这也是 lua 非抢占式协程的好处，但是可能会“串”）
 
 值得一提的是，nginx 的多 worker 进程模型并不像 php-fpm 那样，即并不是一个 worker 进程对应一个下游连接。nginx 的多 worker 进程只是为了用满多个 CPU 核而已，每个 worker 进程可以处理很多的并发连接。ngx_lua 的连接池和 nginx 核心中针对 upstream 模块的连接池一样是在每一个 worker 进程的级别上由许多并发连接共享的
 
