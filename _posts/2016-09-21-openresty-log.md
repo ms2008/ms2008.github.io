@@ -19,7 +19,7 @@ f:write(message .. "\n")
 f:close()
 ```
 
-然而这种写法在大多数情况下，都是可以正常工作的。但是在高并发的系统上，尤其还是多 worker 的环境下，这样写日志是会串的，原因就是 io.open 自身的缓存机制(本质是 libc 的缓存机制，因为 lua 的 io 底层还是调用的 fopen)。这点春哥也在邮件列表回复过：
+然而这种写法在大多数情况下，都是可以正常工作的。但是在高并发的系统上，尤其还是多 worker 的环境下，这样写日志是会串的，原因就是 `io.open` 自身的缓存机制(本质是 libc 的缓存机制，因为 lua 的 io 底层还是调用的 `fopen`)。这点春哥也在邮件列表回复过：
 
 > I decided to use “fopen”, “fprintf” and “fclose”:
 ><br><br>
@@ -29,7 +29,7 @@ f:close()
 
 1. 使用 `ngx.log`
 2. lua-resty-logger-socket
-3. 使用 ffi 直接调用 write() or writev()
+3. 使用 ffi 直接调用 `write()` or `writev()`
 
 需要注意的是，使用第三种解决方案时，到底有没有必要跨 worker 缓存文件句柄？依然引用 agentzh 的回复：
 
