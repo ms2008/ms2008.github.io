@@ -48,7 +48,7 @@ nil
 >
 ```
 
-貌似不对，为什么 string.find 返回 nil，又是万能的 SO 上找到了解释：
+貌似不对，为什么 `string.find` 返回 `nil`，又是万能的 SO 上找到了解释：
 
 > string.find(), by default, does not find strings in strings, it finds patterns in strings. str:find(pattern, init, plain) which allows you to pass in true as a last argument and search for plain strings.
 
@@ -72,4 +72,4 @@ nil
 
 Bingo ! 这下看到预期效果了。
 
-如果你也不确定 `find` 的字符串会不会包含元字符，靠谱的方式，还是加个 true 参数比较好！
+如果你也不确定 `find` 的字符串会不会包含元字符，靠谱的方式，还是加个 `true` 参数比较好！
