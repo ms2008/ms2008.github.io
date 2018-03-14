@@ -11,7 +11,7 @@ tags:
     - module
 ---
 
-在 lua 中加载的其他文件的代码，通常可以使用 `dofile`、`loadfile`、`require` 函数等来完成。其中 `dofile` 每次加载都要编译执行，效率比较低，所以不推荐使用；同样 `loadfile` 虽然只需编译一次，但是并没有把结果缓存到 lua vm 中；因而，我们这里总是推荐使用第三种方式 `requir`e。
+在 lua 中加载的其他文件的代码，通常可以使用 `dofile`、`loadfile`、`require` 函数等来完成。其中 `dofile` 每次加载都要编译执行，效率比较低，所以不推荐使用；同样 `loadfile` 虽然只需编译一次，但是并没有把结果缓存到 lua vm 中；因而，我们这里总是推荐使用第三种方式 `require`。
 
 `require` 能够避免多次重复加载模块，一个模块被加载后会被缓存到 `pacakge.loaded`。 如果需要重新加载模块，可以清理 `package.loaded.test = nil`。
 
