@@ -15,7 +15,7 @@ tags:
 
 Lua 随机数算法用的是 libc 中的 `rand`, 也就是 LCG。然而这个算法的随机性一般。尤其是在一些平台上，当随机种子变化非常小的时候，产生的随机数变化也非常小。这样再经过 Lua 的精度取舍之后，产生的随机序列仍然很相似（<u>伪随机的结果变成可预知性</u>）。
 
-lua-l 上也讨论过这个问题 [msg00564](http://lua-users.org/lists/lua-l/2007-03/msg00564.html)，lua 的作者之一 lhf 给出的解决方案是先弹出前面几个看起来「不怎么随机」的随机数。另外，作者也写过一个基于 MT 算法的 c lib: lrandim, 有兴趣的同学可以去看下。
+lua-l 上也讨论过这个问题 [msg00564](http://lua-users.org/lists/lua-l/2007-03/msg00564.html)，lua 的作者之一 @lhf 给出的解决方案是先弹出前面几个看起来「不怎么随机」的随机数。另外，作者也写过一个基于 MT 算法的 C lib: [lrandom](http://webserver2.tecgraf.puc-rio.br/~lhf/ftp/lua/#lrandom), 有兴趣的同学可以去看下。
 
 然而在 [lua-wiki](http://lua-users.org/wiki/MathLibraryTutorial) 上有一种更为巧妙的实现（*这个用例同样是有缺陷的，这里只是为了引出上面的问题。以后我会单独讨论这个问题*）：
 
