@@ -1,10 +1,10 @@
 ---
 layout:     post
-title:      "Lua string 哈希碰撞"
-subtitle:   "Hash Collisions"
+title:      Lua string 哈希碰撞
+subtitle:   Hash Collisions
 date:       2018-01-24
-author:     "ms2008"
-header-img: "img/post-bg-universe.jpg"
+author:     ms2008
+header-img: img/post-bg-universe.jpg
 catalog:    true
 tags:
     - Lua

@@ -1,10 +1,10 @@
 ---
 layout:     post
-title:      "tail call 到底有啥用？"
-subtitle:   "来体验下 proper tail call 强大的威力"
+title:      tail call 到底有啥用？
+subtitle:   来体验下 proper tail call 强大的威力
 date:       2016-09-09
-author:     "ms2008"
-header-img: "img/post-bg-universe.jpg"
+author:     ms2008
+header-img: img/post-bg-universe.jpg
 catalog:    true
 tags:
     - Lua

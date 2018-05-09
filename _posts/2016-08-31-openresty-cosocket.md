@@ -1,14 +1,15 @@
 ---
 layout:     post
-title:      "cosocket"
-subtitle:   "cosocket 的 connect 是会有创建 sock 的行为的"
+title:      cosocket
+subtitle:   cosocket 的 connect 是会有创建 sock 的行为的
 date:       2016-08-31
-author:     "ms2008"
-header-img: "img/post-bg-re-vs-ng2.jpg"
+author:     ms2008
+header-img: img/post-bg-re-vs-ng2.jpg
 catalog:    true
 tags:
     - OpenResty
     - cosocket
+typora-root-url: ..
 ---
 
 > TCP 协议是面向流的。面向流是指无保护消息边界的，如果发送端连续发送数据，接收端有可能在一次接收动作中会接收两个或者更多的数据包。

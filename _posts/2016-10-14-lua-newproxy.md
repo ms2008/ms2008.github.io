@@ -1,10 +1,10 @@
 ---
 layout:     post
-title:      "使用 newproxy 生成 userdata"
-subtitle:   "原生的 Lua 也是可以生成 userdata 的"
+title:      使用 newproxy 生成 userdata
+subtitle:   原生的 Lua 也是可以生成 userdata 的
 date:       2016-10-14
-author:     "ms2008"
-header-img: "img/post-bg-os-metro.jpg"
+author:     ms2008
+header-img: img/post-bg-os-metro.jpg
 catalog:    true
 tags:
     - Lua

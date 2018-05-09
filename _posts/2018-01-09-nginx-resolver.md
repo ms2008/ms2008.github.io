@@ -1,13 +1,14 @@
 ---
 layout:     post
-title:      'NGINX resolver 配置中的 "坑"'
-subtitle:   "不要着急去当第一个吃螃蟹的人"
+title:      NGINX resolver 配置中的 "坑"
+subtitle:   不要着急去当第一个吃螃蟹的人
 date:       2018-01-09 14:14:10
-author:     "ms2008"
-header-img: "img/post-bg-e2e-ux.jpg"
+author:     ms2008
+header-img: img/post-bg-e2e-ux.jpg
 catalog:    true
 tags:
     - Nginx
+typora-root-url: ..
 ---
 
 最近我把自己的 OpenResty 升级到了最新的 `openresty/1.13.6.1` 版本，却发现 dns 解析不能正常工作了：

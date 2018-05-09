@@ -1,16 +1,17 @@
 ---
 layout:     post
-title:      "Lor 源码解析"
+title:      Lor 源码解析
 subtitle:   ""
 date:       2016-07-23
-author:     "ms2008"
-header-img: "img/post-bg-re-vs-ng2.jpg"
+author:     ms2008
+header-img: img/post-bg-re-vs-ng2.jpg
 catalog:    true
 tags:
     - Framework
     - OpenResty
     - Lua
     - Flame Graphs
+typora-root-url: ..
 ---
 
 lor 是一个基于 ngx_lua 的 MVC 框架，其 API 很类似于 Node 社区的著名框架 Express

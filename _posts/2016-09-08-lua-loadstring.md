@@ -1,10 +1,10 @@
 ---
 layout:     post
-title:      "利用 loadstring 实现模块动态加载"
-subtitle:   "Lua 中模块的动态加载"
+title:      利用 loadstring 实现模块动态加载
+subtitle:   Lua 中模块的动态加载
 date:       2016-09-08
-author:     "ms2008"
-header-img: "img/post-bg-js-module.jpg"
+author:     ms2008
+header-img: img/post-bg-js-module.jpg
 catalog:    true
 tags:
     - Lua

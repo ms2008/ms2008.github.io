@@ -1,14 +1,15 @@
 ---
 layout:     post
-title:      "Lua 排序算法 - 插入排序"
-subtitle:   "Insertion Sort"
+title:      Lua 排序算法 - 插入排序
+subtitle:   Insertion Sort
 date:       2017-03-23
-author:     "ms2008"
-header-img: "img/post-bg-miui6.jpg"
+author:     ms2008
+header-img: img/post-bg-miui6.jpg
 catalog:    true
 tags:
     - Lua
     - Algorithm
+typora-root-url: ..
 ---
 
 设有一组关键字｛K1， K2，…， Kn｝；排序开始就认为 K1 是一个有序序列；让 K2 插入上述表长为 1 的有序序列，使之成为一个表长为 2 的有序序列；然后让 K3 插入上述表长为 2 的有序序列，使之成为一个表长为 3 的有序序列；依次类推，最后让 Kn 插入上述表长为 n-1 的有序序列，得一个表长为 n 的有序序列。

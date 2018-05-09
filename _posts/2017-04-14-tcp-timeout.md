@@ -1,14 +1,15 @@
 ---
 layout:     post
-title:      "理解 timeout，这一篇就够了"
-subtitle:   "对 TCP 协议栈的理解总是需要慢慢积累"
+title:      理解 timeout，这一篇就够了
+subtitle:   对 TCP 协议栈的理解总是需要慢慢积累
 date:       2017-04-14
-author:     "ms2008"
-header-img: "img/post-bg-e2e-ux.jpg"
+author:     ms2008
+header-img: img/post-bg-e2e-ux.jpg
 catalog:    true
 tags:
     - TCP
     - Nginx
+typora-root-url: ..
 ---
 
 PS. 最近比较忙，原先的 Lua 排序算法系列暂时搁置一段时间，以后还是会接着更新的。要是我精力足够，将来可能还会出 Lua 搜索算法系列，尽请期待。

@@ -1,10 +1,10 @@
 ---
 layout:     post
-title:      "OpenResty Coroutine 的调度机制"
+title:      OpenResty Coroutine 的调度机制
 subtitle:   ""
 date:       2016-07-06
-author:     "ms2008"
-header-img: "img/home-bg-geek.jpg"
+author:     ms2008
+header-img: img/home-bg-geek.jpg
 catalog:    true
 tags:
     - OpenResty

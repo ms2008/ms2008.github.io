@@ -1,10 +1,10 @@
 ---
 layout:     post
-title:      "require 理解"
-subtitle:   "Lua require 模块加载机制"
+title:      require 理解
+subtitle:   Lua require 模块加载机制
 date:       2016-09-07
-author:     "ms2008"
-header-img: "img/home-bg-o.jpg"
+author:     ms2008
+header-img: img/home-bg-o.jpg
 catalog:    true
 tags:
     - Lua

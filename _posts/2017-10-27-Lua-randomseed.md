@@ -1,10 +1,10 @@
 ---
 layout:     post
-title:      "重新认识 randomseed"
-subtitle:   "原生 Lua 的 randomseed 是不支持浮点数的"
+title:      重新认识 randomseed
+subtitle:   原生 Lua 的 randomseed 是不支持浮点数的
 date:       2017-10-27
-author:     "ms2008"
-header-img: "img/post-bg-universe.jpg"
+author:     ms2008
+header-img: img/post-bg-universe.jpg
 catalog:    true
 tags:
     - Lua

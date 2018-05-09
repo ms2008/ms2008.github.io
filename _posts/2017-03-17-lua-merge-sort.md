@@ -1,14 +1,15 @@
 ---
 layout:     post
-title:      "Lua 排序算法 - 归并排序"
-subtitle:   "Merge Sort"
+title:      Lua 排序算法 - 归并排序
+subtitle:   Merge Sort
 date:       2017-03-17
-author:     "ms2008"
-header-img: "img/post-bg-miui6.jpg"
+author:     ms2008
+header-img: img/post-bg-miui6.jpg
 catalog:    true
 tags:
     - Lua
     - Algorithm
+typora-root-url: ..
 ---
 
 归并排序（Merge Sort，台湾译作：合并排序）是建立在归并操作上的一种有效的排序算法。该算法是采用分治法（Divide and Conquer）的一个非常典型的应用。

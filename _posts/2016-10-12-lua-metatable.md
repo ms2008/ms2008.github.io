@@ -1,10 +1,10 @@
 ---
 layout:     post
-title:      "Metatable 二三事"
-subtitle:   "告别 Metatable 小白"
+title:      Metatable 二三事
+subtitle:   告别 Metatable 小白
 date:       2016-10-12
-author:     "ms2008"
-header-img: "img/post-bg-2015.jpg"
+author:     ms2008
+header-img: img/post-bg-2015.jpg
 catalog:    true
 tags:
     - Lua

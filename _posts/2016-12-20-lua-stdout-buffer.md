@@ -1,10 +1,10 @@
 ---
 layout:     post
-title:      "Lua 的标准输出与缓存"
+title:      Lua 的标准输出与缓存
 subtitle:   ""
 date:       2016-12-20
-author:     "ms2008"
-header-img: "img/post-bg-rwd.jpg"
+author:     ms2008
+header-img: img/post-bg-rwd.jpg
 catalog:    true
 tags:
     - Lua

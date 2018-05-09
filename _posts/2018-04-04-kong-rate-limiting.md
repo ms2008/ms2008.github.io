@@ -1,16 +1,17 @@
 ---
 layout:     post
-title:      "谈谈 KONG rate-limiting 插件中的缺陷"
-subtitle:   "Redis 高频卡控中的 Race Conditions 问题"
+title:      谈谈 KONG rate-limiting 插件中的缺陷
+subtitle:   Redis 高频卡控中的 Race Conditions 问题
 date:       2018-04-04
-author:     "ms2008"
-header-img: "img/post-bg-universe.jpg"
+author:     ms2008
+header-img: img/post-bg-universe.jpg
 catalog:    true
 tags:
     - KONG
     - Atomicity
     - Redis
     - Race Conditions
+typora-root-url: ..
 ---
 
 知名 API 网关 [KONG][1] 有个 [rate-limiting][2] 的插件，可以利用它来实现限流的需求。例如：根据特定时间窗口来限制 API 的调用次数。其关键代码是这么实现的：

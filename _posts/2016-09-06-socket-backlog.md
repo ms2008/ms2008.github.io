@@ -1,14 +1,15 @@
 ---
 layout:     post
-title:      "捋一捋 backlog 的作用"
-subtitle:   "聊不完的 TCP/IP"
+title:      捋一捋 backlog 的作用
+subtitle:   聊不完的 TCP/IP
 date:       2016-09-06
-author:     "ms2008"
-header-img: "img/post-bg-universe.jpg"
+author:     ms2008
+header-img: img/post-bg-universe.jpg
 catalog:    true
 tags:
     - TCP
     - backlog
+typora-root-url: ..
 ---
 
 我们知道在 socket 编程中，服务端需要经历 listen → bind → accept 这么几个过程；而客户端需要经历 connect → receive 的过程。其中服务端在 bind 的时候需要指定 backlog 的大小。网上的好多文章，感觉都没有讲清楚这个参数的作用，特在此好好捋一下。方便他人，同时也方便自己。

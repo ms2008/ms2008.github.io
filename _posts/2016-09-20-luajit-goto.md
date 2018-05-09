@@ -1,10 +1,10 @@
 ---
 layout:     post
-title:      "Goto in LuaJIT"
-subtitle:   "吊炸天的 LuaJIT"
+title:      Goto in LuaJIT
+subtitle:   吊炸天的 LuaJIT
 date:       2016-09-20
-author:     "ms2008"
-header-img: "img/home-bg-o.jpg"
+author:     ms2008
+header-img: img/home-bg-o.jpg
 catalog:    true
 tags:
     - LuaJIT

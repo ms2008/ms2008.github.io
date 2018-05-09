@@ -1,10 +1,10 @@
 ---
 layout:     post
-title:      "Lua 正确处理可变参数"
-subtitle:   "一定要注意 table 中的 hole"
+title:      Lua 正确处理可变参数
+subtitle:   一定要注意 table 中的 hole
 date:       2016-10-09
-author:     "ms2008"
-header-img: "img/post-bg-miui-ux.jpg"
+author:     ms2008
+header-img: img/post-bg-miui-ux.jpg
 catalog:    true
 tags:
     - Lua

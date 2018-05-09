@@ -1,16 +1,17 @@
 ---
 layout:     post
-title:      "Source Code Pro 字体其实并不完美"
-subtitle:   "Courier New 不愧为终端之王"
+title:      Source Code Pro 字体其实并不完美
+subtitle:   Courier New 不愧为终端之王
 date:       2018-04-19
-author:     "ms2008"
-header-img: "img/home-bg-o.jpg"
+author:     ms2008
+header-img: img/home-bg-o.jpg
 catalog:    true
 tags:
     - Unicode
     - Source Code Pro
     - IDN Homograph Attack
     - 同形异义字攻击
+typora-root-url: ..
 ---
 
 事情的起因是这样的，前两天我在服务器上看到一个莫名其妙的文件夹 `‐p`，所以决定删了它，于是顺手就敲了 `rm -rf -- -p`。

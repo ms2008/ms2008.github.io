@@ -1,10 +1,10 @@
 ---
 layout:     post
-title:      "OpenResty 中的 Atomicity & Lock"
-subtitle:   "OR 中的原子性和锁"
+title:      OpenResty 中的 Atomicity & Lock
+subtitle:   OR 中的原子性和锁
 date:       2016-09-01
-author:     "ms2008"
-header-img: "img/post-bg-re-vs-ng2.jpg"
+author:     ms2008
+header-img: img/post-bg-re-vs-ng2.jpg
 catalog:    true
 tags:
     - OpenResty

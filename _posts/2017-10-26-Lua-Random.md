@@ -1,10 +1,10 @@
 ---
 layout:     post
-title:      "Lua 中的随机数"
-subtitle:   "随机数生成对我们太重要了，我们不能让它随机生成"
+title:      Lua 中的随机数
+subtitle:   随机数生成对我们太重要了，我们不能让它随机生成
 date:       2017-10-26
-author:     "ms2008"
-header-img: "img/post-bg-universe.jpg"
+author:     ms2008
+header-img: img/post-bg-universe.jpg
 catalog:    true
 tags:
     - Lua

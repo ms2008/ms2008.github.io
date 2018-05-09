@@ -1,10 +1,10 @@
 ---
 layout:     post
-title:      "Lua 汉字拼音首字母提取"
-subtitle:   "计算机内部只存储和处理字节，字符只是人类理解的概念。"
+title:      Lua 汉字拼音首字母提取
+subtitle:   计算机内部只存储和处理字节，字符只是人类理解的概念。
 date:       2017-06-05
-author:     "ms2008"
-header-img: "img/post-bg-js-module.jpg"
+author:     ms2008
+header-img: img/post-bg-js-module.jpg
 catalog:    true
 tags:
     - Lua

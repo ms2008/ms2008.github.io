@@ -1,14 +1,15 @@
 ---
 layout:     post
-title:      "Lua 排序算法 - 快速排序"
-subtitle:   "Quick Sort"
+title:      Lua 排序算法 - 快速排序
+subtitle:   Quick Sort
 date:       2017-03-16
-author:     "ms2008"
-header-img: "img/post-bg-miui6.jpg"
+author:     ms2008
+header-img: img/post-bg-miui6.jpg
 catalog:    true
 tags:
     - Lua
     - Algorithm
+typora-root-url: ..
 ---
 
 快速排序使用分治法（Divide and conquer）策略来把一个序列（list）分为两个子序列（sub-lists）。

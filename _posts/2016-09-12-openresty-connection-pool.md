@@ -1,10 +1,10 @@
 ---
 layout:     post
-title:      "OpenResty 中的连接池"
-subtitle:   "连接池常见问题排查"
+title:      OpenResty 中的连接池
+subtitle:   连接池常见问题排查
 date:       2016-09-12
-author:     "ms2008"
-header-img: "img/post-bg-unix-linux.jpg"
+author:     ms2008
+header-img: img/post-bg-unix-linux.jpg
 catalog:    true
 tags:
     - OpenResty

@@ -1,10 +1,10 @@
 ---
 layout:     post
-title:      "luasocket getaddrinfo nil 问题"
+title:      luasocket getaddrinfo nil 问题
 subtitle:   ""
 date:       2015-11-28
-author:     "ms2008"
-header-img: "img/post-bg-miui6.jpg"
+author:     ms2008
+header-img: img/post-bg-miui6.jpg
 catalog:    true
 tags:
     - LuaSocket

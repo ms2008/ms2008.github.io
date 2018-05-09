@@ -1,10 +1,10 @@
 ---
 layout:     post
-title:      "OpenResty 中写日志的套路"
-subtitle:   "记录日志很重要，套路同样更重要"
+title:      OpenResty 中写日志的套路
+subtitle:   记录日志很重要，套路同样更重要
 date:       2016-09-21
-author:     "ms2008"
-header-img: "img/post-bg-rwd.jpg"
+author:     ms2008
+header-img: img/post-bg-rwd.jpg
 catalog:    true
 tags:
     - OpenResty

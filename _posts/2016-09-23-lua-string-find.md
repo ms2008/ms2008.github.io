@@ -1,10 +1,10 @@
 ---
 layout:     post
-title:      'Lua string.find 中的 “坑”'
+title:      Lua string.find 中的 “坑”
 subtitle:   ""
 date:       2016-09-23
-author:     "ms2008"
-header-img: "img/post-bg-digital-native.jpg"
+author:     ms2008
+header-img: img/post-bg-digital-native.jpg
 catalog:    true
 tags:
     - Lua

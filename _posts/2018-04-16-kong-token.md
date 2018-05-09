@@ -1,10 +1,10 @@
 ---
 layout:     post
-title:      "浅谈 KONG key-auth 插件 token 的生成"
-subtitle:   "CSPRNG or 真随机？"
+title:      浅谈 KONG key-auth 插件 token 的生成
+subtitle:   CSPRNG or 真随机？
 date:       2018-04-16
-author:     "ms2008"
-header-img: "img/post-bg-rwd.jpg"
+author:     ms2008
+header-img: img/post-bg-rwd.jpg
 catalog:    true
 tags:
     - KONG

@@ -1,10 +1,10 @@
 ---
 layout:     post
-title:      "pairs 的遍历顺序"
-subtitle:   "其实本质上还是按照顺序遍历的"
+title:      pairs 的遍历顺序
+subtitle:   其实本质上还是按照顺序遍历的
 date:       2018-02-01
-author:     "ms2008"
-header-img: "img/post-bg-2015.jpg"
+author:     ms2008
+header-img: img/post-bg-2015.jpg
 catalog:    true
 tags:
     - Lua

@@ -1,10 +1,10 @@
 ---
 layout:     post
-title:      "Lua string hash 算法"
-subtitle:   "JSHash"
+title:      Lua string hash 算法
+subtitle:   JSHash
 date:       2018-01-26
-author:     "ms2008"
-header-img: "img/post-bg-os-metro.jpg"
+author:     ms2008
+header-img: img/post-bg-os-metro.jpg
 catalog:    true
 tags:
     - Lua
