@@ -1,20 +1,20 @@
 ---
 layout:     post
-title:      谈谈 KONG rate-limiting 插件中的缺陷
+title:      谈谈 Kong rate-limiting 插件中的缺陷
 subtitle:   Redis 高频卡控中的 Race Conditions 问题
 date:       2018-04-04
 author:     ms2008
-header-img: img/post-bg-universe.jpg
+header-img: img/post-bg-kongtribuitor-shirt.png
 catalog:    true
 tags:
-    - KONG
+    - Kong
     - Atomicity
     - Redis
     - Race Conditions
 typora-root-url: ..
 ---
 
-知名 API 网关 [KONG][1] 有个 [rate-limiting][2] 的插件，可以利用它来实现限流的需求。例如：根据特定时间窗口来限制 API 的调用次数。其关键代码是这么实现的：
+知名 API 网关 [Kong][1] 有个 [rate-limiting][2] 的插件，可以利用它来实现限流的需求。例如：根据特定时间窗口来限制 API 的调用次数。其关键代码是这么实现的：
 
 ```lua
 red:init_pipeline()
@@ -34,7 +34,7 @@ end
 
 看上去逻辑非常简单，然而这里却有个陷阱：**无法保证请求的原子性**。即，当有大量的请求到达时，`expire` 可能会执行多次，导致过期时间会被多次刷新，进而导致「KEY」的过期时间会被拉长（*然而这里却意外得到一个好处，继续往下看*）。
 
-另外一个问题是：**KEY 的时效性，也就是 TTL**。KONG 是严格按照业务需求来定义的：
+另外一个问题是：**KEY 的时效性，也就是 TTL**。Kong 是严格按照业务需求来定义的：
 
 ```lua
 local EXPIRATIONS = {
@@ -84,7 +84,7 @@ else
 end
 ```
 
-最后，KONG 的 Blog 上也总结了几种限流方案，感兴趣的可以去瞅瞅 👉 [How to Design a Scalable Rate Limiting Algorithm][3]
+最后，Kong 的 Blog 上也总结了几种限流方案，感兴趣的可以去瞅瞅 👉 [How to Design a Scalable Rate Limiting Algorithm][3]
 
 [1]: https://getkong.org/
 [2]: https://getkong.org/plugins/rate-limiting/
