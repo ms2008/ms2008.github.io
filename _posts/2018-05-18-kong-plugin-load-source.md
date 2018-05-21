@@ -466,7 +466,7 @@ if ctx.delayed_response then
 end
 ```
 
-但是目前 Kong 在实现这块的时候也是有缺陷的，就是插件执行过程中如果 `ngx.say` 被触发，虽然将不会执行接下来的插件，但是依然在运行一个 hot 的迭代。这里其实完全可以避免的：
+但是目前 Kong 在实现这块的时候也是有缺陷的，就是插件执行过程中如果 `ngx.say` 被触发，虽然将不会执行接下来的插件，但是依然在运行一个 hot 的迭代。这里其实完全可以避免，就像下面这样：
 
 ```lua
 if not ctx.delayed_response then
@@ -498,23 +498,118 @@ if not ok then
 end
 ```
 
-主要就是获取 `upstream`，并完成相关 DNS 的解析，其实这个事儿更应该是 `balancer` 阶段来完成。但是 `balancer` 不允许被 `yield`，因此就放在了这里。最后请求将会被 `proxy_pass` 到 kong_upstream，正式进入到 `balancer` 阶段。
+主要就是获取 `upstream`，并完成相关 DNS 的解析，其实这个事儿更应该是由 `balancer` 阶段来完成。只不过由于 `balancer` 不允许被 `yield`，因此就放在了这里。最后请求将会被 `proxy_pass` 到 kong_upstream，正式进入到 `balancer` 阶段。
 
 
 ### 5. balancer
 
+> 这个阶段不会运行任何插件，当然也不会有「phase 循环」。
+
+这个阶段的主要工作其实就是完成重试逻辑，因为在上个阶段的 `core.access.before` hook 已经完成了第一次节点的选取，这个阶段只是简单做了下 `ngx_balancer.set_current_peer` 和 `ngx_balancer.set_more_tries`。
+
+重试依然使用的是 `balancer.execute`，关键步骤为:
+
+```lua
+if addr.try_count > 1 then
+  -- only call balancer on retry, first one is done in `core.access.after` which runs
+  -- in the ACCESS context and hence has less limitations than this BALANCER context
+  -- where the retries are executed
+
+  -- record failure data
+  local previous_try = tries[addr.try_count - 1]
+  previous_try.state, previous_try.code = get_last_failure()
+
+  -- Report HTTP status for health checks
+  if addr.balancer then
+    if previous_try.state == "failed" then
+      addr.balancer.report_tcp_failure(addr.ip, addr.port)
+    else
+      addr.balancer.report_http_status(addr.ip, addr.port, previous_try.code)
+    end
+  end
+
+  local ok, err, errcode = balancer_execute(addr)
+  if not ok then
+    ngx_log(ngx_ERR, "failed to retry the dns/balancer resolver for ",
+            tostring(addr.host), "' with: ", tostring(err))
+    return ngx.exit(errcode)
+  end
+
+else
+  -- first try, so set the max number of retries
+  local retries = addr.retries
+  if retries > 0 then
+    set_more_tries(retries)
+  end
+end
+```
+
+值得一提的是 Kong 使用的 Ring-balancer 是自己实现的 [lua-resty-dns-client][2]，target 的选取默认使用的是 round-robin 算法，当 `upstream` 开启了 hash 时，则会换为一致性 hash。
 
 
 ### 6. header_filter
 
+这个阶段将会接着执行「phase 循环」，只不过经过了 access 阶段之后，当前请求应该被执行的插件已经确定，并被缓存在自身中。这个阶段只是在遍历所有插件时将直接从上面的缓存中查找，并执行相应的 header_filter 方法，而不再经过生效策略的筛选，这当然也是出于性能上的考量。
+
+```lua
+local ctx = ngx.ctx
+core.header_filter.before(ctx)
+
+for plugin, plugin_conf in plugins_iterator(singletons.loaded_plugins) do
+  plugin.handler:header_filter(plugin_conf)
+end
+
+core.header_filter.after(ctx)
+```
+
+最后执行的 `core.header_filter.after` hook，用于将 Kong 的处理时间注入到 header 中：
+
+```lua
+if singletons.configuration.latency_tokens then
+  -- balancer 阶段执行时间
+  header[constants.HEADERS.UPSTREAM_LATENCY] = ctx.KONG_WAITING_TIME
+  -- access 阶段执行时间
+  header[constants.HEADERS.PROXY_LATENCY]    = ctx.KONG_PROXY_LATENCY
+end
+```
+
 
 ### 7. body_filter
+
+这个阶段其实和上个阶段差不多，只不过是在「phase 循环」中执行的 handler 为 `body_filter` 而已。这里就不再赘述了。
+
+```lua
+local ctx = ngx.ctx
+for plugin, plugin_conf in plugins_iterator(singletons.loaded_plugins) do
+  plugin.handler:body_filter(plugin_conf)
+end
+
+core.body_filter.after(ctx)
+```
 
 
 ### 8. log
 
+log 阶段依旧和上面的 filter 阶段差别不大：
+
+```lua
+local ctx = ngx.ctx
+for plugin, plugin_conf in plugins_iterator(singletons.loaded_plugins) do
+  plugin.handler:log(plugin_conf)
+end
+
+core.log.after(ctx)
+```
+
+不过是在 `core.log.after` hook 中需要更新 balancer 的被动健康检查状况而已。
+
+
 ***
 
-## 附录
+## 结语
+
+Kong 通过其插件扩展机制，提供了超越核心平台的额外功能和服务。<u>同时由于插件的启用是基于每请求的，会随着生命周期的结束而被销毁</u>。其被诟病的内存碎片问题，我猜测多少也和这一点的设计有些关系。
+
 
 [1]: https://ms2008.github.io/2017/10/24/PRNG/
+[2]: https://github.com/Kong/lua-resty-dns-client
