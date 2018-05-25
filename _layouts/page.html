@@ -89,7 +89,7 @@ layout: default
                     <form id="search-form" action="https://www.google.com" onsubmit="return dispatch()" target="_blank">
                         <div class="form-group">
                             <div class="input-group">
-                                <div class="input-group-addon"><i class="fa fa-search"></i></div>
+                                <a class="input-group-addon" onclick="return dispatch()" href="#"><i class="fa fa-search"></i></a>
                                 <input type="text" class="form-control" id="search" name="q" placeholder="search" value="">
                             </div>
                         </div>
@@ -150,7 +150,7 @@ layout: default
                                 <a target="_blank" href="https://www.zhihu.com/people/{{ site.zhihu_username }}">
                                     <span class="fa-stack fa-lg">
                                         <i class="fa fa-circle fa-stack-2x"></i>
-                                        <i class="fa  fa-stack-1x fa-inverse">知</i>
+                                        <i class="fa fa-stack-1x fa-inverse">知</i>
                                     </span>
                                 </a>
                             </li>
