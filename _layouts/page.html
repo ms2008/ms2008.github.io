@@ -81,6 +81,21 @@ layout: default
                 col-xs-12
                 sidebar-container
             ">
+
+                <!-- Search -->
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="#">SEARCH</a></h5>
+                    <form id="search-form" action="https://www.google.com" onsubmit="return dispatch()" target="_blank">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <div class="input-group-addon"><i class="fa fa-search"></i></div>
+                                <input type="text" class="form-control" id="search" name="q" placeholder="search" value="">
+                            </div>
+                        </div>
+                    </form>
+                </section>
+
                 <!-- Featured Tags -->
                 {% if site.featured-tags %}
                 <section>
