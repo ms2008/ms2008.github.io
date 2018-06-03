@@ -43,9 +43,11 @@ ss -anp | grep nginx
 ![](/img/in-post/backlog.png)
 
 - LISTEN 状态
+
   Recv-Q 表示的是当前已完成队列的大小；Send-Q 表示的则是最大的 listen backlog 数值。
 
 - 其余状态
+
   Recv-Q 表示 receive queue 中的 bytes 数量；Send-Q 表示 send queue 中的 bytes 数值。
 
 所以上图中显示的是，nginx 的 `backlog` 为 511，当前已完成队列的大小为 0。那么还有个问题，就是未完成队列在哪里看？很简单：
