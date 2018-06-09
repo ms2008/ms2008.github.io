@@ -53,6 +53,6 @@ DICT 和 lrucache 的区别：
 - DICT 使用的是共享内存，每次操作都是全局锁。如果高并发环境，不同 worker 之间容易引起竞争。所以单个 shared.dict 的体积不能过大。
 - lrucache 是 worker 内使用的，由于 nginx 是单进程方式存在，所以永远不会触发锁。并且没有 shared.dict 的体积限制。
 
-lurcache，效率更高，但是不同 worker 之间不同享，同一缓存数据可能被冗余存储。
+lurcache，效率更高，但是不同 worker 之间不共享，同一缓存数据可能被冗余存储。
 
 最后需要注意的是，对于 DICT 来说，`flush_all` 并不会实际释放共享内存的空间，它只是把所有的元素标记为过期而已。`flush_expired` 会实际释放过期了的元素。`delete` 也会释放内存，和 `set(key, nil)` 操作等价。
