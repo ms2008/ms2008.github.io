@@ -37,3 +37,22 @@ graph LR
     F --> G(GLOBAL)
     end
 ```
+
+```mermaid
+graph TB
+    subgraph OpenResty
+    A(fa:fa-envelope master) -- event --> B(fa:fa-times worker)
+    A -- event --> C(fa:fa-check worker)
+    A -- event --> D(fa:fa-times worker)
+    end
+    C -. broadcast & subscribe .- P
+    G -. broadcast & subscribe .- P
+    P[fa:fa-database PostgreSQL]
+    subgraph OpenResty
+    E(fa:fa-envelope master) -- event --> F(fa:fa-times worker)
+    E -- event --> G(fa:fa-check worker)
+    E -- event --> H(fa:fa-times worker)
+    end
+    classDef rect stroke:#333,stroke-width:1px
+    class P rect
+```
