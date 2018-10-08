@@ -4,7 +4,7 @@ title:      "Golang -ldflags 的一个技巧"
 subtitle:   "go version 信息注入"
 date:       2018-10-08
 author:     "ms2008"
-header-img: "img/post-bg-re-vs-ng2.jpg"
+header-img: "img/post-bg-golang-blog-hero.jpg"
 catalog:    true
 tags:
     - Golang
@@ -12,7 +12,7 @@ tags:
 
 我在开发 go 的项目时，习惯上会在编译后的二进制文件中注入 git 等版本信息后再发布。一直以来都是这么做的：
 
-```go
+```
 package main
 
 import (
@@ -52,7 +52,7 @@ UTC Build Time : 2018-09-30_03:40:36AM
 
 然而在多人协作的项目时，大家的 go 版本可能会不同，所以我又尝试将 `go version` 信息植入到程序中。
 
-```go
+```
 package main
 
 import (
@@ -80,7 +80,7 @@ func main() {
 
 记得之前，我看到过 [codis][1] 的源码是通过一个 shell 脚本生成一个额外的 go package 来处理的：
 
-```sh
+```
 version=`git log --date=iso --pretty=format:"%cd @%H" -1`
 if [ $? -ne 0 ]; then
     version="unknown version"
@@ -113,7 +113,7 @@ EOF
 但是这样，每开启一个新项目都需要额外的 shell 脚本，也够麻烦的。所以，很长时间我都是这么来偷懒的：
 
 
-```go
+```
 package main
 
 import (
