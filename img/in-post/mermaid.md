@@ -56,3 +56,12 @@ graph TB
     classDef rect stroke:#333,stroke-width:1px
     class P rect
 ```
+
+```mermaid
+sequenceDiagram
+    User->>CDN: GET /index.html
+    Note over CDN: 判断是否需要回源
+    CDN-->>Real Server: 回源
+    Real Server-->>CDN: 更新至最新的内容
+    CDN->>User: 返回 /index.html
+```
