@@ -8,7 +8,7 @@ The articles contained on this site is free, oriented toward experienced users w
 
 Feel free to email me with any comments, suggestions or bugs. I can't promise to always reply to every email (in fact I tend not to reply to many at all!) due to lack of free time but you can be assured I do read every one I receive.
 
-##### Wechat
+##### Wechat Official Account
 
 <div class="visible-md visible-lg">
     <img src="/img/wechat-344.jpg" width="344" />
