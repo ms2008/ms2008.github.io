@@ -1,6 +1,6 @@
 ---
 layout:     post
-title:      "OpenResty 2017 中的一个彩蛋"
+title:      "OpenResty Con 2017 中的一个彩蛋"
 subtitle:   "welcome to the future"
 date:       2019-01-02
 author:     "ms2008"
