@@ -466,7 +466,7 @@ if ctx.delayed_response then
 end
 ```
 
-但是目前 Kong 在实现这块的时候也是有缺陷的，就是插件执行过程中如果 `ngx.say` 被触发，虽然将不会执行接下来的插件，但是依然在运行一个 hot 的迭代。这里其实完全可以避免，就像下面这样：
+~~但是目前 Kong 在实现这块的时候也是有缺陷的，就是插件执行过程中如果 `ngx.say` 被触发，虽然将不会执行接下来的插件，但是依然在运行一个 hot 的迭代。这里其实完全可以避免，就像下面这样：~~
 
 ```lua
 if not ctx.delayed_response then
@@ -475,6 +475,10 @@ else
   break
 end
 ```
+
+> <span style="background-color: #FFFB00;">事实上 Kong 的做法完全没有问题，这么修改反而错了。因为全局插件在 rewrite 阶段已经加载完毕，在 access 阶段只需要加载完剩余的局部插件即可。在这个阶段即使插件产生了 circuiting，那么也应该遍历完所有插件（继续去加载优先级比较低的插件）。</span>
+><br/><br/>
+> 详情可以参考这里：[break the plugins iterator as soon as possible][3]
 
 执行完插件的 `access()` handler 之后，就通过 `flush_delayed_response` 将延迟发送（如果需要的话）的 content 响应给客户端：
 
@@ -613,3 +617,4 @@ Kong 通过其插件扩展机制，提供了超越核心平台的额外功能和
 
 [1]: https://ms2008.github.io/2017/10/24/PRNG/
 [2]: https://github.com/Kong/lua-resty-dns-client
+[3]: https://github.com/Kong/kong/pull/4230
