@@ -132,7 +132,7 @@ WARNING: Number of errors: 0, skipped probes: 7
 
 然而，这个内存泄漏的问题在 Kong 1.0 中却无法复现出来。通过对比这两个版本的 bot-detection 插件源码，几乎没有什么区别，所以可以暂时断定：**内存泄漏不是由 bot-detection 插件自身导致，同时也可以排除掉 `ngx.re.find`、`resty.lrucache` 自身的问题**。
 
-问题视乎走到了僵局。再次回顾 bot-detection 插件源码，看到下面这段：
+问题似乎走到了僵局。再次回顾 bot-detection 插件源码，看到下面这段：
 
 ```lua
 local cache = ua_caches[conf]
