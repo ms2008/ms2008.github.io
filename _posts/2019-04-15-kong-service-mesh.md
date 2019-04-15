@@ -51,5 +51,4 @@ tags:
 
 
 [1]: https://zhuanlan.zhihu.com/p/40166203
-[2]: https://gitter.im/Kong/kongKong
-
+[2]: https://gitter.im/Kong/kong
