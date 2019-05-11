@@ -1,4 +1,4 @@
-> Yet another man.
+> I'm not a native English speaker, so forgive me any mistakes.
 
 Hi, I am *@ms2008*, a software engineer. Messing with computers for over 10 years.
 
