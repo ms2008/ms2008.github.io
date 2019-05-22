@@ -88,7 +88,7 @@ i is: 0
 
 ## Mutex vs Atomic
 
-解决 race 的问题时，无非就是上锁。可能很多人都听说过一个高逼格的词叫「无锁队列」。 都一听到加锁就觉得很 low，那无锁又是怎么一回事？其实就是利用 `atomic` 特性，那 `atomic` 会比 `mutex` 有什么好处呢？[Benign Data Races: What Could Possibly Go Wrong?][1] 的作者总结了这两者的一个区别：
+解决 race 的问题时，无非就是上锁。可能很多人都听说过一个高逼格的词叫「无锁队列」。 都一听到加锁就觉得很 low，那无锁又是怎么一回事？其实就是利用 `atomic` 特性，那 `atomic` 会比 `mutex` 有什么好处呢？go race detector 的作者总结了这两者的一个区别：
 
 > Mutexes do no scale. Atomic loads do.
 
@@ -100,6 +100,5 @@ i is: 0
 
 - [The Go Memory Model](https://golang.org/ref/mem)
 - [Would this race condition be considered a bug?](https://groups.google.com/d/topic/golang-nuts/HUfe1iGbo1w/discussion)
+- [Benign Data Races: What Could Possibly Go Wrong?](https://software.intel.com/en-us/blogs/2013/01/06/benign-data-races-what-could-possibly-go-wrong)
 - [理解Go标准库中的atomic.Value类型](https://blog.betacat.io/post/golang-atomic-value-exploration/)
-
-[1]: https://software.intel.com/en-us/blogs/2013/01/06/benign-data-races-what-could-possibly-go-wrong
