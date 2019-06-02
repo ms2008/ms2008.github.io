@@ -19,7 +19,7 @@ typora-root-url: ..
 package router
 
 import (
-    "net/http"
+	"net/http"
 	_ "net/http/pprof"
 
 	"github.com/prometheus/client_golang/prometheus/promhttp"
