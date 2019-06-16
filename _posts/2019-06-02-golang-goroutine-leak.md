@@ -29,7 +29,7 @@ func InitAdmin() {
 	adminRouter := http.DefaultServeMux
 	adminRouter.Handle("/metrics", promhttp.Handler())
 
-    adminServer = &http.Server{
+	adminServer = &http.Server{
 		Addr:           ":8081",
 		Handler:        adminRouter,
 	}
