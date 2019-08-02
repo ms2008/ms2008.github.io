@@ -113,7 +113,7 @@ main.main()
 type T3 struct {
 	b int64
 	c int32
-	_ int64
+	_ int32
 	d int64
 }
 ```
