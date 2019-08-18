@@ -72,7 +72,7 @@ s4 := strconv.Itoa(12)
 
 ### Hack it
 
-了解了它的机制之后，我们可以试着来绕过其限制，来完成一个可以内部化所有字符串的实现。首先我们需要一个pool，把所有的字符串都放到这个 pool 里，只要字符串在这个 pool 里只有一份（例如 Map 就是一个非常好的选择），就可以认为已经被 intern 了。下面是一个老外的实现：
+了解了它的机制之后，我们可以试着来绕过其限制，来完成一个可以内部化所有字符串的实现。首先我们需要一个 pool，把所有的字符串都放到这个 pool 里，只要字符串在这个 pool 里只有一份（例如 Map 就是一个非常好的选择），就可以认为已经被 intern 了。下面是一个老外的实现：
 
 ```go
 package main
@@ -104,7 +104,7 @@ func main() {
 
 ![](/img/in-post/string-interning-mem.png)
 
-string intern 除了可以显著降低内存外，还有一个优点就是降低相同字符串的对比时间：
+string intern 除了可以显著降低内存外，还有一个优点就是降低相同字符串的比较时间：
 
 ```go
 package main
@@ -156,7 +156,7 @@ func BenchmarkStringCompareIntern10(b *testing.B)  { benchmarkStringCompareInter
 func BenchmarkStringCompareIntern100(b *testing.B) { benchmarkStringCompareIntern(b, 100) }
 ```
 
-可以看到被 intern 的字符串对比时间基本是个常数，而未被 intern 的字符串对比呈现出一个 `O(N)` 趋势：
+可以看到被 intern 的字符串对比时间基本是个常数，而未被 intern 的字符串比较呈现出一个 `O(N)` 趋势：
 
 ```
 BenchmarkStringCompare1-2           	300000000	         4.65 ns/op	       0 B/op	       0 allocs/op
@@ -167,7 +167,7 @@ BenchmarkStringCompareIntern10-2    	500000000	         3.65 ns/op	       0 B/op
 BenchmarkStringCompareIntern100-2   	500000000	         3.65 ns/op	       0 B/op	       0 allocs/op
 ```
 
-**实际上 Go 对比两个字符串是否相等，首先会对比其地址是否相同，如果相同自然是相同的串，时间复杂度为 `O(1)`；如果地址不同，再对比其长度，长度不同自然也是不同的串，时间复杂度任然可以看为是 `O(1)`；如果长度相同，则需要逐个对比字节，那么时间复杂度就退化成了 `O(N)`**。
+**实际上 Go 对比两个字符串是否相等，首先会对比其长度，长度不同自然是不同的串，时间复杂度为 `O(1)`；如果长度相同，再对比其底层字节数组地址，地址相同肯定是相同的串，时间复杂度仍然可以认为是 `O(1)`；如果地址不同，则需要逐个对比字节，那么时间复杂度也就退化为了 `O(N)`**。
 
 string intern 作为一种高效的手段，在 Go 内部也有不少应用，比如在 HTTP 中 intern 公用的请求头来避免多余的内存分配：
 
@@ -189,6 +189,8 @@ func init() {
 	}
 }
 ```
+
+如果你在做缓存系统，或者是需要操作大量的字符串，不妨也考虑下 string intern 来优化你的应用。
 
 ### 参考文献
 
