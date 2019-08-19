@@ -27,8 +27,8 @@ typora-root-url: ..
 
 ```go
 type StringHeader struct {
-    Data uintptr
-    Len  int
+	Data uintptr
+	Len  int
 }
 ```
 
@@ -49,8 +49,8 @@ func main() {
 	// 这两个地址并不相同
 	fmt.Printf("str add: %p, %p\n", &str1, &str2)
 
-	x1 := (*reflect.SliceHeader)(unsafe.Pointer(&str1))
-	x2 := (*reflect.SliceHeader)(unsafe.Pointer(&str2))
+	x1 := (*reflect.StringHeader)(unsafe.Pointer(&str1))
+	x2 := (*reflect.StringHeader)(unsafe.Pointer(&str2))
 	// 底层都是指向相同的 []byte
 	fmt.Printf("data add: %#v, %#v\n", x1.Data, x2.Data)
 }
@@ -79,8 +79,15 @@ package main
 
 import (
 	"fmt"
+	"reflect"
 	"strconv"
+	"unsafe"
 )
+
+// stringptr returns a pointer to the string data.
+func stringptr(s string) uintptr {
+	return (*reflect.StringHeader)(unsafe.Pointer(&s)).Data
+}
 
 type stringInterner map[string]string
 
