@@ -3,8 +3,8 @@ title: Poslua Blog
 SEOTitle: poslua | ms2008 Blog
 header-img: img/home-bg.jpg
 email: ms2008vip@gmail.com
-description: "关于 Lua, OpenResty | poslua, linux, 性能, 安全, 计算机技术 | 这里是 @ms2008 的个人博客，与你一起发现更大的世界。"
-keyword: "poslua, Lua, LuaJIT, OpenResty, ms2008, Python, Golang, Linux, Web, 互联网"
+description: "关于 Golang, C, Lua, OpenResty | poslua, linux, 性能, 安全, 计算机技术 | 这里是 @ms2008 的个人博客，与你一起发现更大的世界。"
+keyword: "poslua, Golang, C, Lua, Python, LuaJIT, TCP/IP, OpenResty, ms2008, Linux, Web, 互联网"
 url: "https://ms2008.github.io"              # your host, for absolute URL
 baseurl: ""                             # for example, '/blog' if your blog hosted on 'host/blog'
 
@@ -68,7 +68,7 @@ ga_domain: ms2008.github.io
 
 # Sidebar settings
 sidebar: true                           # whether or not using Sidebar.
-sidebar-about-description: "写写代码，做做架构，<br>离开世界之前，一切都是过程"
+sidebar-about-description: "11100111101000001000000<br>1111001111001010110011100"
 sidebar-avatar: /img/avatar-ms2008.jpg      # use absolute URL, seeing it's used in both `/` and `/about/`
 
 
