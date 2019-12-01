@@ -16,10 +16,10 @@ Hey，我是 ms2008，程序员，多出没于[博客](https://ms2008.github.io)
 ##### 微信公众号
 
 <div class="visible-md visible-lg">
-    <img src="/img/wechat-344.jpg" width="344" />
+    <img src="/img/wechat-press-1200.png" width="1200" />
     <small class="img-hint">Scanning on mobile</small>
 </div>
 <div class="visible-xs visible-sm">
-    <img src="/img/wechat-258.jpg" width="258" />
+    <img src="/img/wechat-press-800.png" width="800" />
     <small class="img-hint">Scanning on mobile</small>
 </div>
