@@ -1,6 +1,6 @@
 ---
 layout:     post
-title:      "Nginx vs Enovy vs Mosn 平滑升级原理解析"
+title:      "Nginx vs Envoy vs Mosn 平滑升级原理解析"
 subtitle:   "TCP 连接迁移"
 date:       2019-12-28
 author:     "ms2008"
@@ -8,14 +8,14 @@ header-img: "img/post-bg-service-mesh.jpg"
 catalog:    true
 tags:
     - Nginx
-    - Enovy
+    - Envoy
     - Mosn
     - TCP
 ---
 
 本文适合对 Nginx 实现原理比较感兴趣的同学阅读，需要具备一定的网络编程知识。
 
-**平滑升级的本质就是 listener fd 的迁移**，虽然 Nginx、Enovy、Mosn 都提供了平滑升级支持，但是鉴于它们进程模型的差异，反映在实现上还是有些区别的。这里来探讨下它们其中的区别，并着重介绍 Nginx 的实现。
+**平滑升级的本质就是 listener fd 的迁移**，虽然 Nginx、Envoy、Mosn 都提供了平滑升级支持，但是鉴于它们进程模型的差异，反映在实现上还是有些区别的。这里来探讨下它们其中的区别，并着重介绍 Nginx 的实现。
 
 ### Nginx
 
@@ -148,15 +148,15 @@ ngx_open_listening_sockets(ngx_cycle_t *cycle)
 }
 ```
 
-### Enovy
+### Envoy
 
-Enovy 使用的是单进程多线程模型，其局限就是无法通过环境变量来传递 listener fd。因此 Enovy 采用的是 UDS（unix domain sockets）方案。当 New Enovy 启动完成后，会通过 UDS 向 Old Enovy 请求 listener fd 副本，拿到 listener fd 之后开始接管新来的连接，并通知 Old Enovy 终止运行。
+Envoy 使用的是单进程多线程模型，其局限就是无法通过环境变量来传递 listener fd。因此 Envoy 采用的是 UDS（unix domain sockets）方案。当 New Envoy 启动完成后，会通过 UDS 向 Old Envoy 请求 listener fd 副本，拿到 listener fd 之后开始接管新来的连接，并通知 Old Envoy 终止运行。
 
 > file descriptor 是可以通过 `sendmsg/recvmsg` 来传递的
 
 ### Mosn
 
-Mosn 的方案和 Enovy 类似，都是通过 UDS 来传递 listener fd。但是其比 Enovy 更厉害的地方在于它可以把老的连接从 Old Mosn 上迁移到 New Mosn 上。**也就是说把一个连接从进程 A 迁移到进程 B，而保持连接不断**！！！厉不厉害？听起来很简单，但是实现起来却没那么容易，比如数据已经被拷贝到了应用层，但是还没有被处理，怎么办？这里面有很多细节需要处理。它子所以能做到这种层面，靠的也是内核的 `sendmsg/recvmsg` 技术。
+Mosn 的方案和 Envoy 类似，都是通过 UDS 来传递 listener fd。但是其比 Envoy 更厉害的地方在于它可以把老的连接从 Old Mosn 上迁移到 New Mosn 上。**也就是说把一个连接从进程 A 迁移到进程 B，而保持连接不断**！！！厉不厉害？听起来很简单，但是实现起来却没那么容易，比如数据已经被拷贝到了应用层，但是还没有被处理，怎么办？这里面有很多细节需要处理。它子所以能做到这种层面，靠的也是内核的 `sendmsg/recvmsg` 技术。
 
 > SCM_RIGHTS - Send or receive a set of open file descriptors from another process. The data portion contains an integer array of the file descriptors. The passed file descriptors behave as though they have been created with dup(2). http://linux.die.net/man/7/unix
 
@@ -166,7 +166,7 @@ Mosn 的方案和 Enovy 类似，都是通过 UDS 来传递 listener fd。但是
 
 ### 对比
 
-Nginx 的实现是兼容性最强的，因为 Enovy 和 Mosn 都依赖 `sendmsg/recvmsg` 系统调用，需要内核 3.5+ 支持。Mosn 的难度最高，算得上是真正的无损升级，而 Nginx 和 Enovy 对于老的连接，仅仅是实现 graceful shutdown，严格来说是有损的。这对于 HTTP(通过 `Connection: close`) 和 gRPC(GoAway Frame) 协议支持很友好，但是遇到自定义的 TCP 协议就抓瞎了。如果遇到客户端没有处理 `close` 异常，很容易发生 socket fd 泄露问题。
+Nginx 的实现是兼容性最强的，因为 Envoy 和 Mosn 都依赖 `sendmsg/recvmsg` 系统调用，需要内核 3.5+ 支持。Mosn 的难度最高，算得上是真正的无损升级，而 Nginx 和 Envoy 对于老的连接，仅仅是实现 graceful shutdown，严格来说是有损的。这对于 HTTP(通过 `Connection: close`) 和 gRPC(GoAway Frame) 协议支持很友好，但是遇到自定义的 TCP 协议就抓瞎了。如果遇到客户端没有处理 `close` 异常，很容易发生 socket fd 泄露问题。
 
 ### 参考文献
 
