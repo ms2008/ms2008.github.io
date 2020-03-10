@@ -43,6 +43,8 @@ request.REQUEST_HEADERS_NAMES = twaf_func:table_keys(request_headers)
 
 ### CASE 1
 
+> 题外话：根据 Lua Wiki 上的优化建议，local 化的变量会更快。但是这在 LuaJIT 上几乎已经没有了优势。
+
 ```lua
 local t = {}
 local table_insert = table.insert
@@ -53,8 +55,6 @@ end
 ```
 
 最经典的写法，LuaJIT 2.1 耗时：**1838ms**
-
-> 题外话：根据 Lua Wiki 上的优化建议，local 化的变量会更快。但是这在 LuaJIT 上几乎已经没有了优势。
 
 ### CASE 2
 
@@ -94,7 +94,29 @@ end
 
 结果 LuaJIT 2.1 耗时：**57ms**
 
-一个简单的优化，性能就提升了惊人的 32 倍！还可以更快吗？
+一个简单的优化，性能就提升了惊人的 32 倍！
+
+### CASE 4
+
+CASE-3 的性能已经非常好了，但还是漏了一个优化的点：table 的扩容。
+
+> table 的扩容用的是 `hashpow2`，它是不小于 table hash or array 区域数量的 2^n^ 形式的整数
+
+```lua
+local table_new = require "table.new"
+
+local t = table_new(1e7, 0)
+local c = 1
+
+for i=1,1e7 do
+    t[c] = i
+    c = c + 1
+end
+```
+
+结果 LuaJIT 2.1 耗时：**30ms**
+
+性能进一步提升到 64 倍！！！还可以更快吗？
 
 ### 参考文献
 
