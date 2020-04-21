@@ -150,7 +150,7 @@ ngx_open_listening_sockets(ngx_cycle_t *cycle)
 
 ### Envoy
 
-Envoy 使用的是单进程多线程模型，其局限就是无法通过环境变量来传递 listener fd。因此 Envoy 采用的是 UDS（unix domain sockets）方案。当 New Envoy 启动完成后，会通过 UDS 向 Old Envoy 请求 listener fd 副本，拿到 listener fd 之后开始接管新来的连接，并通知 Old Envoy 终止运行。
+Envoy 使用的是单进程多线程模型，~~其局限就是无法通过环境变量来传递 listener fd（垮进程了）~~。其实通过一个线程 fork 也能传递环境变量，不过我觉得在多线程使用 fork 总感觉不是很和谐，况且 Envoy 也没有这么做。因此 Envoy 采用的是 UDS（unix domain sockets）方案。当 New Envoy 启动完成后，会通过 UDS 向 Old Envoy 请求 listener fd 副本，拿到 listener fd 之后开始接管新来的连接，并通知 Old Envoy 终止运行。
 
 > file descriptor 是可以通过 `sendmsg/recvmsg` 来传递的
 
