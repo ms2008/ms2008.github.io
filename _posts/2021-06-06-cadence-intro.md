@@ -46,13 +46,25 @@ AWS Simple Workflow -> Uber Cadence -> Temporal
   托管 tasklist 进行 task scheduling, dispatching
 
 - Worker service
+
   - Decision Worker
 
-    又叫 Workflow Worker，负责执行 workflow func 以生成 activity task
+    又叫 Workflow Worker，本质上就是 workflow func，完全靠 decision task 驱动，decision 由 cadence 生成
 
   - Activity Worker
 
-    执行 activity
+    靠 activity task 驱动，activity task 由 decision worker 生成
+
+
+执行流程：
+
+1. 用户发起 workflow
+2. cadence history 状态发生变化，生成第一个 decision task
+3. decision worker 轮询到 decision task 开始执行 workflow func
+4. workflow func 执行导致 history 发生变更，生成 activity task，此时该 workflow block 等待接下来的 decision
+5. activity worker 轮询到 activity task 开始执行 activity func
+6. activity func 执行完毕返回给 cadence，生成第二个 decision task
+7. ...
 
 ### 🚥 Workflow
 
@@ -112,6 +124,7 @@ Cadence Workflow 内部状态获取有两种方式：
 - [Cadence — The only workflow orchestrator you will ever need](https://blog.usejournal.com/cadence-the-only-workflow-orchestrator-you-will-ever-need-ea8f74ed5563)
 - [Using Cadence workflows to spin up Kubernetes](https://banzaicloud.com/blog/introduction-to-cadence)
 - [Building your first Cadence Workflow](https://medium.com/stashaway-engineering/building-your-first-cadence-workflow-e61a0b29785)
+- [What exactly is a Cadence decision task?](https://stackoverflow.com/questions/62904129/what-exactly-is-a-cadence-decision-task)
 
 [1]: https://news.ycombinator.com/item?id=25614487
 [2]: https://news.ycombinator.com/item?id=19734067
