@@ -3,7 +3,7 @@ title: Poslua Blog
 SEOTitle: poslua | ms2008 Blog
 header-img: img/home-bg.jpg
 email: ms2008vip@gmail.com
-description: "关于 Golang, C, Lua, OpenResty | poslua, linux, 性能, 安全, 计算机技术 | 这里是 @ms2008 的个人博客，与你一起发现更大的世界。"
+description: "关于 Golang, C, Lua, OpenResty | poslua, ms2008 | 这里是 @ms2008 的个人博客，与你一起发现更大的世界。"
 keyword: "poslua, Golang, C, Lua, Python, LuaJIT, TCP/IP, OpenResty, ms2008, Linux, Web, 互联网"
 url: "https://ms2008.github.io"              # your host, for absolute URL
 baseurl: ""                             # for example, '/blog' if your blog hosted on 'host/blog'
@@ -61,7 +61,7 @@ netease_comment: false
 # ba_track_id: [your track id]
 
 # Google Analytics
-ga_track_id: 'UA-44966783-2'            # Format: UA-xxxxxx-xx
+ga_track_id: 'G-G7Z1LRN64P'            # Format: UA-xxxxxx-xx
 ga_domain: ms2008.github.io
 
 
