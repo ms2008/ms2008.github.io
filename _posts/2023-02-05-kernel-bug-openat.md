@@ -100,9 +100,17 @@ Command-line utility -> glibc -> system call
 
 看来是 4.2 内核以下，应该都有这个问题，手上有环境的同学可以试试。
 
-等下，别走！还有一个疑问，那为啥 debian 下就没有问题？
+### QA
 
-答：debian 和 ubuntu 的 `ln` 版本不同，实现不一样，不依赖 `openat()`:
+Q: **那么如何解决这个问题？**
+
+1. 升级内核
+2. `ln` 执行前，先手动删除 symlink
+3. 添加 `-n` 选项让 `ln` 将已存在的 symlink 当作文件处理
+
+Q: **那为啥 debian 下就没有问题？**
+
+debian 和 ubuntu 的 `ln` 版本不同，实现不一样，不依赖 `openat()`:
 
 ```
 stat("/tmp/access.log", {st_mode=S_IFCHR|0620, st_rdev=makedev(0x88, 0), ...}) = 0
